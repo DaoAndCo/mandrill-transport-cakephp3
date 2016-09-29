@@ -37,6 +37,7 @@ In your app.php file.
 ## Utilisation
 
 It can be used like normal Mail transport in cakephp.
+
 If you want to use a template from mailchimp/mandrill, you just have to add the key 'template_name' with the name of the template in your viewVars. And optionnaly other vars which are used in the template.
 
 ```
