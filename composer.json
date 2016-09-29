@@ -1,6 +1,6 @@
 {
     "name": "orken/mandrill-transport-cakephp3",
-    "description": "MandrillTransport plugin for CakePHP",
+    "description": "MandrillTransport plugin for CakePHP 3+",
     "type": "cakephp-plugin",
     "require": {
         "php": ">=5.5.9",
