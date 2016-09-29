@@ -1,5 +1,5 @@
 {
-    "name": "your-name-here/MandrillTransport",
+    "name": "orken/MandrillTransport",
     "description": "MandrillTransport plugin for CakePHP",
     "type": "cakephp-plugin",
     "require": {
