@@ -1,4 +1,4 @@
-# MandrillTransport plugin for CakePHP
+# MandrillTransport plugin for CakePHP 3+
 
 ## Installation
 
