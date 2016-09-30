@@ -11,6 +11,13 @@ composer require orken/mandrill-transport-cakephp3
 ```
 
 ## Setting up your CakePHP application
+In your bootstrap.php
+
+```
+Plugin::load('MandrillTransport');
+```
+
+
 In your app.php file.
 
 ```

@@ -16,6 +16,7 @@ use Cake\Network\Exception\SocketException;
 
 
 class MandrillTransport extends AbstractTransport {
+
   public $transportConfig = [
     'host'           => 'mandrillapp.com',
     'api_key'        => null,
@@ -37,6 +38,10 @@ class MandrillTransport extends AbstractTransport {
   public $isDebug;
   public $http;
 
+  /**
+   * @param  Email $email Email instance
+   * @return String Response object, json formatted
+   */
   public function send(Email $email) {
 
     $this->isDebug         = Configure::read('debug');
@@ -92,6 +97,12 @@ class MandrillTransport extends AbstractTransport {
     return $response->json;
   }
 
+  /**
+   * @param  Email $email Email instance
+   * @param  String $service 'send' or 'send-template'
+   * @param  Array $request Mandril request object
+   * @return String Response object
+   */
   protected function _send(Email $email,$service,$request)
   {
     return $this->http->post(
@@ -101,6 +112,10 @@ class MandrillTransport extends AbstractTransport {
     );
   }
 
+  /**
+   * @param  Email $email Email instance
+   * @return Array
+   */
   protected function _from(Email $email)
   {
     return [
@@ -109,6 +124,10 @@ class MandrillTransport extends AbstractTransport {
     ];
   }
 
+  /**
+   * @param  Email $email Email instance
+   * @return Array
+   */
   protected function _to(Email $email)
   {
     foreach (['to', 'cc', 'bcc'] as $type) {
@@ -123,6 +142,10 @@ class MandrillTransport extends AbstractTransport {
     return $to;
   }
 
+  /**
+   * @param  Email $email Email instance
+   * @return Array
+   */
   protected function _attachments(Email $email) {
     foreach ($email->attachments() as $filename => $file) {
       $content = base64_encode(file_get_contents($file['file']));
