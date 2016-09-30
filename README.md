@@ -51,8 +51,8 @@ If you want to use a template from mailchimp/mandrill, you just have to add the 
 $email = new Email('mandrill');
 $email->from(['me@example.com' => 'My Site'])
     ->to('you@example.com')
-    ->cc(yourcc@exmaple.com) // optional
-    ->bcc(yourbcc@exmaple.com) // optional
+    ->cc('yourcc@exmaple.com') // optional
+    ->bcc('yourbcc@exmaple.com') // optional
     ->attachments('/path/to/your/file') // optional
     ->viewVars([
       'template_name' => 'your template name at mandrill',
