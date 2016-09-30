@@ -20,10 +20,10 @@ class MandrillTransport extends AbstractTransport {
     'host'           => 'mandrillapp.com',
     'api_key'        => null,
     'api_key_test'   => null,
-    'from'           => null,
     'merge_language' => 'handlebars',
     'inline_css'     => true,
-    'subaccount'     => null
+    'subaccount'     => null,
+    'headers'        => []
   ];
 
   public $defaultRequest = [
@@ -33,28 +33,20 @@ class MandrillTransport extends AbstractTransport {
     'message'          => [],
     'async'            => false,
     'ip_pool'          => 'Main Pool',
-
   ];
   public $isDebug;
+  public $http;
 
   public function send(Email $email) {
+
     $this->isDebug         = Configure::read('debug');
     $this->transportConfig = Hash::merge($this->transportConfig, $this->_config);
-    $http = new Client([
+    $this->http = new Client([
       'host'    => $this->transportConfig['host'],
       'scheme'  => 'https',
-      'headers' => [
-        'User-Agent' => 'CakePHP Mandrill API Plugin'
-      ]
+      'headers' => $this->transportConfig['headers']
     ]);
     $request = $this->defaultRequest;
-
-    if (isset($email->viewVars['template_name']) && !empty($email->viewVars['template_name']))
-    {
-      $request['template_name']   = $email->viewVars['template_name'];
-      $request['message']['tags'] = [$email->viewVars['template_name']];
-      unset( $email->viewVars['template_name']);
-    }
 
     if ($this->isDebug)
     {
@@ -83,15 +75,30 @@ class MandrillTransport extends AbstractTransport {
         'content' => $value
       ];
     }
-    $response = $http->post(
-      '/api/1.0/messages/send-template.json',
-      json_encode($request),
-      ['type' => 'json']
-    );
+
+    if (isset($email->viewVars['template_name']) && !empty($email->viewVars['template_name']))
+    {
+      $request['template_name']   = $email->viewVars['template_name'];
+      $request['message']['tags'] = [$email->viewVars['template_name']];
+      $response = $this->_send($email,'send-template',$request);
+    } else {
+      $request['message']['html'] = $email->message(\Cake\Network\Email\Email::MESSAGE_HTML);
+      $request['message']['text'] = $email->message(\Cake\Network\Email\Email::MESSAGE_TEXT);
+      $response = $this->_send($email,'send',$request);
+    }
     if (!$response) {
       throw new SocketException($response->code);
     }
     return $response->json;
+  }
+
+  protected function _send(Email $email,$service,$request)
+  {
+    return $this->http->post(
+      '/api/1.0/messages/' . $service . '.json',
+      json_encode($request),
+      ['type' => 'json']
+    );
   }
 
   protected function _from(Email $email)
