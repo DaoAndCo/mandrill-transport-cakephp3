@@ -147,6 +147,7 @@ class MandrillTransport extends AbstractTransport {
    * @return Array
    */
   protected function _attachments(Email $email) {
+    $message = [];
     foreach ($email->attachments() as $filename => $file) {
       $content = base64_encode(file_get_contents($file['file']));
       if (isset($file['contentId'])) {
