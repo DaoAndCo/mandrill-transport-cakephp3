@@ -57,7 +57,7 @@ class MandrillTransport extends AbstractTransport {
     {
       $request['key'] = (empty($this->transportConfig['api_key_test'])?$this->transportConfig['api_key']:$this->transportConfig['api_key_test']);
     } else {
-      $request['message']['key'] = $this->transportConfig['api_key'];
+      $request['key'] = $this->transportConfig['api_key'];
     }
 
     $request['message'] += $this->_from($email);
