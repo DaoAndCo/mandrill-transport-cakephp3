@@ -24,7 +24,8 @@ class MandrillTransport extends AbstractTransport {
     'merge_language' => 'handlebars',
     'inline_css'     => true,
     'subaccount'     => null,
-    'headers'        => []
+    'headers'        => [],
+    'proxy'          => false,
   ];
 
   public $defaultRequest = [
@@ -46,11 +47,19 @@ class MandrillTransport extends AbstractTransport {
 
     $this->isDebug         = Configure::read('debug');
     $this->transportConfig = Hash::merge($this->transportConfig, $this->_config);
-    $this->http = new Client([
+    
+    $clientOptions = [
       'host'    => $this->transportConfig['host'],
       'scheme'  => 'https',
       'headers' => $this->transportConfig['headers']
-    ]);
+    ];
+
+    if ($this->transportConfig['proxy']) {
+        $clientOptions['proxy'] = $this->transportConfig['proxy'];
+    }
+
+    $this->http = new Client($clientOptions);
+    
     $request = $this->defaultRequest;
 
     if ($this->isDebug)
